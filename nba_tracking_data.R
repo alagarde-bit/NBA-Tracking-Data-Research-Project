@@ -6,11 +6,12 @@ library(trajr)
 library(lubridate)
 library(hms)
 library(janitor)
-source('C:/Users/alexl/Downloads/_functions.R')
-source('C:/Users/alexl/Downloads/fullcourt.R')
-nba_tracking <- sportvu_convert_json("C:/Users/alexl/Desktop/0021500440.json")
+source('_functions.R')
+source('fullcourt.R')
+# nba_tracking <- sportvu_convert_json("C:/Users/alexl/Desktop/0021500440.json")
+nba_tracking <- read_csv("NBAtracking.csv")
 str(nba_tracking)
-plays <- read.csv("C:/Users/alexl/Downloads/LAL_LAC_playbyplay.csv") %>% 
+plays <- read.csv("LakersVsClippers.csv") %>% 
   clean_names()
 full_track <- merge(nba_tracking, plays, 
                     by.x = "event.id",
@@ -62,9 +63,10 @@ full_track %>%
   filter('n()'!= 11) %>% 
   head(n = 15)
   
+selected_play <- full_track %>% 
+  filter(event.id == 2)
 
-
-ball_distance <- player_dist_matrix(nba_tracking, 2) %>% 
+ball_distance <- player_dist_matrix(selected_play) %>% 
   select(starts_with("ball"))
 
 selected_play <- full_track %>% 
